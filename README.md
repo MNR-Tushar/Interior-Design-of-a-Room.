@@ -14,6 +14,25 @@ A fully interactive 3D room simulation built with OpenGL (GLUT). The scene inclu
 
 ---
 
+ 
+## 🎬 Demo Video
+ 
+▶️ [Click here to watch the demo](https://shorturl.at/e9cCL)
+ 
+---
+ 
+## 📸 Screenshots
+ 
+**View 1 — Living Area (TV, Sofa, Carpet, Fan)**
+ 
+![Room View 1](screenshots/Picture.png)
+ 
+**View 2 — Bedroom Area (Bed, Bookshelf, Study Table, AC, Window)**
+ 
+![Room View 2](screenshots/Picture1.png)
+ 
+---
+
 ## 📸 Features
 
 ### 🏗️ Room Structure
