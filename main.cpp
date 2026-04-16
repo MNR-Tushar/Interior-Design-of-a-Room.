@@ -22,6 +22,10 @@ float acFlow = 0.0f;
 // ===== Curtain animation =====
 float curtainWave = 0.0f;
 
+// ===== TV Screen flicker =====
+float tvFlicker = 0.0f;
+bool  tvOn      = true;
+
 // ===== Helpers =====
 void setColor(float r, float g, float b) { glColor3f(r, g, b); }
 
@@ -110,6 +114,82 @@ void drawRoom() {
     setColor(0.78f, 0.82f, 0.88f);
     drawQuad(-6,0,6,  6,0,6,  6,5,6,  -6,5,6);
 
+}
+
+// ===== Front Wall Decorations =====
+void drawFrontWallDecor() {
+
+    float shift = -3.8f;   // move everything 3.5f left
+
+    // ── Wall Shelf (front wall, center-left) ──
+    setColor(0.55f, 0.35f, 0.14f);
+    drawQuad(-1.5f+shift,3.2f,5.99f,  1.5f+shift,3.2f,5.99f,  1.5f+shift,3.42f,5.99f,  -1.5f+shift,3.42f,5.99f);
+
+    // Shelf depth
+    setColor(0.48f, 0.30f, 0.12f);
+    glPushMatrix();
+    glTranslatef(0+shift, 3.31f, 5.78f);
+    glScalef(3.0f, 0.10f, 0.44f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // Shelf bracket left
+    setColor(0.40f, 0.25f, 0.10f);
+    glPushMatrix(); glTranslatef(-1.3f+shift, 3.0f, 5.82f); glScalef(0.06f, 0.42f, 0.06f); glutSolidCube(1.0); glPopMatrix();
+
+    // Shelf bracket right
+    glPushMatrix(); glTranslatef(1.3f+shift, 3.0f, 5.82f); glScalef(0.06f, 0.42f, 0.06f); glutSolidCube(1.0); glPopMatrix();
+
+    // Small items on shelf — 3 small books
+    float bkC[3][3]={{0.85f,0.15f,0.15f},{0.15f,0.55f,0.85f},{0.15f,0.72f,0.25f}};
+    float bkX[3]={-0.9f, -0.6f, -0.25f};
+
+    for(int b=0;b<3;b++){
+        setColor(bkC[b][0],bkC[b][1],bkC[b][2]);
+        glPushMatrix();
+        glTranslatef(bkX[b]+shift, 3.52f, 5.82f);
+        glScalef(0.12f, 0.28f, 0.18f);
+        glutSolidCube(1.0);
+        glPopMatrix();
+    }
+
+    // Small plant on shelf
+    setColor(0.62f, 0.38f, 0.18f);
+    glPushMatrix(); glTranslatef(0.7f+shift, 3.42f, 5.82f); drawCylinder(0.07f, 0.10f, 10); glPopMatrix();
+
+    setColor(0.18f, 0.65f, 0.22f);
+    glPushMatrix(); glTranslatef(0.7f+shift, 3.56f, 5.82f); glutSolidSphere(0.10f, 8, 8); glPopMatrix();
+
+    // Small vase on shelf
+    setColor(0.75f, 0.55f, 0.80f);
+    glPushMatrix(); glTranslatef(1.1f+shift, 3.42f, 5.82f); drawCylinder(0.055f, 0.14f, 10); glPopMatrix();
+
+    // ── Wall Art / Painting ──
+    setColor(0.28f, 0.16f, 0.06f);
+    drawQuad(-0.9f+shift,1.2f,5.99f,  0.9f+shift,1.2f,5.99f,  0.9f+shift,2.8f,5.99f,  -0.9f+shift,2.8f,5.99f);
+
+    setColor(0.96f, 0.92f, 0.82f);
+    drawQuad(-0.78f+shift,1.32f,5.985f,  0.78f+shift,1.32f,5.985f,  0.78f+shift,2.68f,5.985f,  -0.78f+shift,2.68f,5.985f);
+
+    setColor(0.40f, 0.62f, 0.88f);
+    drawQuad(-0.78f+shift,2.10f,5.982f,  0.78f+shift,2.10f,5.982f,  0.78f+shift,2.68f,5.982f,  -0.78f+shift,2.68f,5.982f);
+
+    setColor(0.25f, 0.55f, 0.25f);
+    drawQuad(-0.78f+shift,1.32f,5.982f,  0.78f+shift,1.32f,5.982f,  0.78f+shift,2.10f,5.982f,  -0.78f+shift,2.10f,5.982f);
+
+    setColor(1.0f, 0.90f, 0.20f);
+    glPushMatrix(); glTranslatef(0.3f+shift, 2.35f, 5.978f); glutSolidSphere(0.15f, 10, 10); glPopMatrix();
+
+    setColor(0.55f, 0.55f, 0.58f);
+    glPushMatrix(); glTranslatef(0+shift, 2.82f, 5.995f); glutSolidSphere(0.018f, 6, 6); glPopMatrix();
+
+    // ── Power socket ──
+    setColor(0.88f, 0.88f, 0.86f);
+    drawQuad(1.65f+shift,0.4f,5.99f,  1.65f+shift,0.75f,5.99f,  2.0f+shift,0.75f,5.99f,  2.0f+shift,0.4f,5.99f);
+
+    setColor(0.30f, 0.30f, 0.30f);
+    glPushMatrix(); glTranslatef(1.77f+shift, 0.52f, 5.995f); glutSolidSphere(0.025f,5,5); glPopMatrix();
+    glPushMatrix(); glTranslatef(1.88f+shift, 0.52f, 5.995f); glutSolidSphere(0.025f,5,5); glPopMatrix();
 }
 
 /// ===== SINGLE Window on back wall (LOWERED) with curtains =====
@@ -209,6 +289,280 @@ void drawSingleWindowWithCurtain() {
         glVertex3f(xp, botY, cz + wave*0.5f);
     }
     glEnd();
+}
+
+// ===== ★ NEW: Wall-Mounted TV on Front Wall =====
+void drawWallMountedTV() {
+    // TV is centered at x = -3.5f on front wall (z = 5.99f)
+    // TV screen area: x from -5.2 to -1.8, y from 1.80 to 3.50
+
+    float cx = 0.00f;   // center X
+    float cy = 2.65f;    // center Y
+    float tw = 3.40f;    // total width
+    float th = 1.70f;    // total height
+    float wz = 5.99f;    // wall z
+
+    // ── Outer bezel (very slim, matte black) ──
+    setColor(0.08f, 0.08f, 0.10f);
+    drawQuad(cx - tw*0.5f,      cy - th*0.5f,      wz,
+             cx + tw*0.5f,      cy - th*0.5f,      wz,
+             cx + tw*0.5f,      cy + th*0.5f,      wz,
+             cx - tw*0.5f,      cy + th*0.5f,      wz);
+
+    // ── Screen surface ──
+    if(tvOn) {
+        // Dynamic blue-teal screen glow
+        float g = 0.38f + 0.04f * sin(tvFlicker);
+        setColor(0.05f + 0.02f*sin(tvFlicker*0.7f), g, 0.62f);
+    } else {
+        setColor(0.04f, 0.04f, 0.05f);
+    }
+    float bw = 0.06f; // bezel width
+    drawQuad(cx - tw*0.5f + bw,  cy - th*0.5f + bw,  wz + 0.005f,
+             cx + tw*0.5f - bw,  cy - th*0.5f + bw,  wz + 0.005f,
+             cx + tw*0.5f - bw,  cy + th*0.5f - bw,  wz + 0.005f,
+             cx - tw*0.5f + bw,  cy + th*0.5f - bw,  wz + 0.005f);
+
+    if(tvOn) {
+        // ── Simulated UI on screen: dark bars + colorful blocks ──
+        glDisable(GL_LIGHTING);
+
+        // Top bar (status bar)
+        setColor(0.02f, 0.12f, 0.25f);
+        drawQuad(cx - 1.60f, cy + 0.72f, wz+0.008f,
+                 cx + 1.60f, cy + 0.72f, wz+0.008f,
+                 cx + 1.60f, cy + 0.80f, wz+0.008f,
+                 cx - 1.60f, cy + 0.80f, wz+0.008f);
+
+        // Main content blocks (simulated app/show grid)
+        float colors[4][3] = {
+            {0.80f,0.20f,0.20f},
+            {0.20f,0.50f,0.85f},
+            {0.18f,0.72f,0.45f},
+            {0.85f,0.55f,0.10f}
+        };
+        float blockW = 0.70f, blockH = 0.50f;
+        for(int i = 0; i < 4; i++) {
+            setColor(colors[i][0]*0.6f, colors[i][1]*0.6f, colors[i][2]*0.6f);
+            float bx = cx - 1.45f + i * 0.78f;
+            drawQuad(bx,          cy - 0.42f, wz+0.009f,
+                     bx+blockW,   cy - 0.42f, wz+0.009f,
+                     bx+blockW,   cy + 0.10f, wz+0.009f,
+                     bx,          cy + 0.10f, wz+0.009f);
+            // highlight on block
+            setColor(colors[i][0], colors[i][1], colors[i][2]);
+            drawQuad(bx+0.04f,    cy - 0.38f, wz+0.010f,
+                     bx+blockW*0.5f, cy - 0.38f, wz+0.010f,
+                     bx+blockW*0.5f, cy - 0.18f, wz+0.010f,
+                     bx+0.04f,    cy - 0.18f, wz+0.010f);
+        }
+
+        // Bottom navigation bar
+        setColor(0.02f, 0.08f, 0.18f);
+        drawQuad(cx - 1.60f, cy - 0.76f, wz+0.008f,
+                 cx + 1.60f, cy - 0.76f, wz+0.008f,
+                 cx + 1.60f, cy - 0.50f, wz+0.008f,
+                 cx - 1.60f, cy - 0.50f, wz+0.008f);
+
+        // Nav icons (small colored dots)
+        float navX[] = {cx-1.2f, cx-0.6f, cx, cx+0.6f, cx+1.2f};
+        float navC[5][3] = {
+            {0.9f,0.9f,0.9f},{0.5f,0.8f,1.0f},{0.3f,0.9f,0.5f},
+            {1.0f,0.7f,0.2f},{0.8f,0.4f,0.8f}
+        };
+        for(int n=0;n<5;n++) {
+            setColor(navC[n][0],navC[n][1],navC[n][2]);
+            glPushMatrix();
+            glTranslatef(navX[n], cy-0.63f, wz+0.010f);
+            glutSolidSphere(0.045f, 6, 6);
+            glPopMatrix();
+        }
+
+        glEnable(GL_LIGHTING);
+
+        // ── Screen ambient glow (subtle colored quad slightly in front) ──
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(0.10f, 0.35f, 0.65f, 0.08f + 0.03f*sin(tvFlicker));
+        drawQuad(cx - tw*0.5f + bw, cy - th*0.5f + bw, wz+0.012f,
+                 cx + tw*0.5f - bw, cy - th*0.5f + bw, wz+0.012f,
+                 cx + tw*0.5f - bw, cy + th*0.5f - bw, wz+0.012f,
+                 cx - tw*0.5f + bw, cy + th*0.5f - bw, wz+0.012f);
+        glDisable(GL_BLEND);
+    }
+
+    // ── Wall bracket (metal mount) ──
+    setColor(0.45f, 0.45f, 0.48f);
+    // Horizontal arm
+    glPushMatrix();
+    glTranslatef(cx, cy - 0.08f, wz + 0.10f);
+    glScalef(0.55f, 0.05f, 0.20f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+    // Vertical plate on wall
+    setColor(0.35f, 0.35f, 0.38f);
+    glPushMatrix();
+    glTranslatef(cx, cy - 0.08f, wz + 0.02f);
+    glScalef(0.30f, 0.28f, 0.04f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Power LED indicator ──
+    if(tvOn) setColor(0.10f, 0.95f, 0.30f);
+    else     setColor(0.90f, 0.10f, 0.10f);
+    glPushMatrix();
+    glTranslatef(cx + tw*0.5f - 0.15f, cy - th*0.5f + 0.05f, wz + 0.008f);
+    glutSolidSphere(0.015f, 5, 5);
+    glPopMatrix();
+
+    // ── Soundbar below TV (sleek) ──
+    setColor(0.10f, 0.10f, 0.12f);
+    glPushMatrix();
+    glTranslatef(cx, cy - th*0.5f - 0.12f, wz + 0.06f);
+    glScalef(2.60f, 0.12f, 0.12f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+    // Soundbar grille dots
+    glDisable(GL_LIGHTING);
+    setColor(0.22f, 0.22f, 0.24f);
+    for(int d = 0; d < 18; d++) {
+        glPushMatrix();
+        glTranslatef(cx - 1.20f + d * 0.135f, cy - th*0.5f - 0.12f, wz + 0.125f);
+        glutSolidSphere(0.018f, 4, 4);
+        glPopMatrix();
+    }
+    // Soundbar LED strip (blue)
+    if(tvOn) setColor(0.20f, 0.55f, 1.0f);
+    else     setColor(0.12f, 0.12f, 0.14f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINES);
+        glVertex3f(cx - 1.25f, cy - th*0.5f - 0.065f, wz + 0.125f);
+        glVertex3f(cx + 1.25f, cy - th*0.5f - 0.065f, wz + 0.125f);
+    glEnd();
+    glLineWidth(1.0f);
+    glEnable(GL_LIGHTING);
+}
+
+
+// ===== ★ NEW: TV Cabinet below TV =====
+void drawTVCabinet() {
+    // Cabinet positioned in front of TV wall, centered at x=-3.5
+    float cx = 0.00f;
+    float cz = 5.40f;  // slightly away from wall
+
+    glPushMatrix();
+    glTranslatef(cx, 0.0f, cz);
+
+    // ── Main cabinet body ──
+    setColor(0.18f, 0.18f, 0.20f);
+    glPushMatrix();
+    glTranslatef(0, 0.32f, 0);
+    glScalef(3.20f, 0.64f, 0.62f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Cabinet top surface (light wood veneer) ──
+    setColor(0.70f, 0.55f, 0.38f);
+    glPushMatrix();
+    glTranslatef(0, 0.655f, 0);
+    glScalef(3.24f, 0.035f, 0.66f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Front panel face (medium dark, 3 door sections) ──
+    float doorX[] = {-1.02f, 0.0f, 1.02f};
+    for(int d = 0; d < 3; d++) {
+        // Door panel
+        setColor(0.22f, 0.22f, 0.25f);
+        glPushMatrix();
+        glTranslatef(doorX[d], 0.32f, 0.315f);
+        glScalef(0.93f, 0.58f, 0.02f);
+        glutSolidCube(1.0f);
+        glPopMatrix();
+
+        // Door handle (small gold bar)
+        setColor(0.80f, 0.68f, 0.22f);
+        glPushMatrix();
+        glTranslatef(doorX[d], 0.32f, 0.328f);
+        glScalef(0.18f, 0.025f, 0.015f);
+        glutSolidCube(1.0f);
+        glPopMatrix();
+
+        // Subtle door edge highlight
+        setColor(0.32f, 0.32f, 0.36f);
+        glPushMatrix();
+        glTranslatef(doorX[d], 0.32f, 0.308f);
+        glScalef(0.95f, 0.60f, 0.005f);
+        glutSolidCube(1.0f);
+        glPopMatrix();
+    }
+
+    // ── Slim legs / feet (4 metal cylinders) ──
+    setColor(0.55f, 0.55f, 0.58f);
+    float lx[] = {-1.45f, 1.45f, -1.45f, 1.45f};
+    float lz[] = {-0.27f, -0.27f, 0.27f, 0.27f};
+    for(int i = 0; i < 4; i++) {
+        glPushMatrix();
+        glTranslatef(lx[i], 0.0f, lz[i]);
+        drawCylinder(0.04f, 0.065f, 8);
+        glPopMatrix();
+    }
+
+    // ── Items ON cabinet top ──
+
+    // Set-top box / streaming device (left side)
+    setColor(0.12f, 0.12f, 0.14f);
+    glPushMatrix();
+    glTranslatef(-1.10f, 0.675f, 0.05f);
+    glScalef(0.40f, 0.06f, 0.26f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+    // STB LED
+    if(tvOn) setColor(0.10f, 0.90f, 0.30f);
+    else     setColor(0.80f, 0.10f, 0.10f);
+    glPushMatrix();
+    glTranslatef(-0.92f, 0.708f, 0.18f);
+    glutSolidSphere(0.012f, 5, 5);
+    glPopMatrix();
+
+    // Small decorative plant (right side)
+    setColor(0.52f, 0.32f, 0.14f);
+    glPushMatrix();
+    glTranslatef(1.10f, 0.655f, 0.0f);
+    drawCylinder(0.065f, 0.10f, 10);
+    glPopMatrix();
+    setColor(0.15f, 0.65f, 0.25f);
+    glPushMatrix();
+    glTranslatef(1.10f, 0.785f, 0.0f);
+    glutSolidSphere(0.10f, 8, 8);
+    glPopMatrix();
+
+    // Small photo frame (center-right on top)
+    setColor(0.28f, 0.16f, 0.06f);
+    glPushMatrix();
+    glTranslatef(0.42f, 0.660f, -0.05f);
+    glScalef(0.18f, 0.24f, 0.04f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+    setColor(0.55f, 0.70f, 0.90f);
+    glPushMatrix();
+    glTranslatef(0.42f, 0.665f, -0.03f);
+    glScalef(0.14f, 0.18f, 0.02f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Cable management (thin line down to floor) ──
+    glDisable(GL_LIGHTING);
+    setColor(0.15f, 0.15f, 0.18f);
+    glLineWidth(1.5f);
+    glBegin(GL_LINES);
+        glVertex3f(0.0f, 0.655f, 0.31f);
+        glVertex3f(0.0f, 0.0f,   0.31f);
+    glEnd();
+    glLineWidth(1.0f);
+    glEnable(GL_LIGHTING);
+
+    glPopMatrix();
 }
 
 // ===== Door on left wall — INSIDE ROOM (swing inside) =====
@@ -1248,6 +1602,9 @@ void display() {
     drawDigitalClock();
     drawPicture();
     drawSofaPhotoFrame();
+    drawFrontWallDecor();
+    drawWallMountedTV();
+    drawTVCabinet();
 
     // HUD overlay
     glDisable(GL_LIGHTING);
@@ -1262,7 +1619,7 @@ void display() {
     glLoadIdentity();
 
     glRasterPos2i(10, 30);
-    const char* hint1 = "W/S: Fwd/Back  A/D: Left/Right  Q/E: Up/Down  Arrows: Look  L: Light  F: Fan  +/-: Fan Speed  O: AC On  P: AC Off  ESC: Quit";
+    const char* hint1 = "W/S: Fwd/Back  A/D: Left/Right  Q/E: Up/Down  Arrows: Look  L: Light  F: Fan  +/-: Fan Speed  O: AC On  P: AC Off T:TV on/off ESC: Quit";
     for(int i=0; hint1[i]; i++) glutBitmapCharacter(GLUT_BITMAP_8_BY_13, hint1[i]);
 
     glRasterPos2i(10, 14);
@@ -1320,6 +1677,7 @@ void keyboard(unsigned char key, int x, int y) {
         case 'd': case 'D': camX += cos(rad)*speed; camZ -= sin(rad)*speed; break;
         case 'q': case 'Q': camY += speed; break;
         case 'e': case 'E': camY -= speed; break;
+        case 't': case 'T': tvOn    = !tvOn;    break;
         case 'l': case 'L': lightOn = !lightOn; break;
         case 'f': case 'F': fanOn   = !fanOn;   break;
         case 'o': case 'O': acOn    = true;      break;
