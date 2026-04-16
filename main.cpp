@@ -192,6 +192,114 @@ void drawFrontWallDecor() {
     glPushMatrix(); glTranslatef(1.88f+shift, 0.52f, 5.995f); glutSolidSphere(0.025f,5,5); glPopMatrix();
 }
 
+/// ===== Enhanced Wall-Mounted Flower (NOT Ceiling Hanging) =====
+void drawHangingWallFlower() {
+
+    float shift = 1.00f;
+
+    // Wall position (front wall fixed)
+    float fx = 2.6f + shift;
+    float fy = 3.0f;
+    float fz = 5.97f; // directly attached to wall
+
+    // ── Wall Bracket (NOT ceiling hook) ──
+    setColor(0.80f, 0.70f, 0.25f);
+    glPushMatrix();
+    glTranslatef(fx, 3.80f, fz);
+    glScalef(0.25f, 0.05f, 0.08f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Short Wall Support Rod ──
+    setColor(0.55f, 0.40f, 0.20f);
+    glPushMatrix();
+    glTranslatef(fx, 3.50f, fz);
+    glScalef(0.03f, 0.60f, 0.03f);
+    glutSolidCube(1.0f);
+    glPopMatrix();
+
+    // ── Decorative Pot (attached close to wall) ──
+    setColor(0.72f, 0.42f, 0.18f);
+    glPushMatrix();
+    glTranslatef(fx, fy, fz - 0.08f);
+    drawCylinder(0.20f, 0.30f, 18);
+    glPopMatrix();
+
+    // Pot Rim
+    setColor(0.82f, 0.55f, 0.25f);
+    glPushMatrix();
+    glTranslatef(fx, fy + 0.30f, fz - 0.08f);
+    drawCylinder(0.23f, 0.05f, 18);
+    glPopMatrix();
+
+    // Pot Base
+    setColor(0.55f, 0.28f, 0.12f);
+    glPushMatrix();
+    glTranslatef(fx, fy - 0.02f, fz - 0.08f);
+    drawCylinder(0.15f, 0.03f, 18);
+    glPopMatrix();
+
+    // ── Leaves ──
+    setColor(0.15f, 0.68f, 0.20f);
+
+    float leafPos[7][3] = {
+        {0.00f,0.48f,0.00f},
+        {-0.12f,0.40f,0.00f},
+        {0.12f,0.40f,0.00f},
+        {-0.08f,0.56f,0.00f},
+        {0.08f,0.56f,0.00f},
+        {0.00f,0.38f,0.10f},
+        {0.00f,0.52f,-0.06f}
+    };
+
+    for(int i=0;i<7;i++){
+        glPushMatrix();
+        glTranslatef(fx + leafPos[i][0], fy + leafPos[i][1], fz - 0.08f + leafPos[i][2]);
+        glutSolidSphere(0.11f, 10, 10);
+        glPopMatrix();
+    }
+
+    // ── Side vines ──
+    setColor(0.12f, 0.55f, 0.18f);
+
+    for(int i=0;i<4;i++){
+        glPushMatrix();
+        glTranslatef(fx - 0.12f, fy + 0.18f - i*0.12f, fz - 0.08f);
+        glutSolidSphere(0.045f, 8, 8);
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(fx + 0.12f, fy + 0.15f - i*0.11f, fz - 0.08f);
+        glutSolidSphere(0.045f, 8, 8);
+        glPopMatrix();
+    }
+
+    // ── Flowers ──
+    float flowerPos[5][3] = {
+        {-0.10f,0.60f,0.00f},
+        {0.10f,0.58f,0.00f},
+        {0.00f,0.67f,0.00f},
+        {-0.03f,0.48f,0.10f},
+        {0.05f,0.52f,-0.05f}
+    };
+
+    float flowerCol[5][3] = {
+        {1.0f,0.35f,0.45f},
+        {1.0f,0.82f,0.15f},
+        {0.78f,0.50f,1.0f},
+        {1.0f,0.60f,0.75f},
+        {0.95f,0.30f,0.30f}
+    };
+
+    for(int i=0;i<5;i++){
+        setColor(flowerCol[i][0], flowerCol[i][1], flowerCol[i][2]);
+        glPushMatrix();
+        glTranslatef(fx + flowerPos[i][0], fy + flowerPos[i][1], fz - 0.08f + flowerPos[i][2]);
+        glutSolidSphere(0.05f, 8, 8);
+        glPopMatrix();
+    }
+}
+
 /// ===== SINGLE Window on back wall (LOWERED) with curtains =====
 void drawSingleWindowWithCurtain() {
 
@@ -587,18 +695,7 @@ void drawDoor() {
     glutSolidSphere(0.08, 10, 10);
     glPopMatrix();
 
-    // ===== Door stopper on floor (inside room) =====
-    setColor(0.60f, 0.60f, 0.62f);
-    glPushMatrix();
-    glTranslatef(-5.60f, 0.0f, 3.15f);
-    drawCylinder(0.04f, 0.08f, 8);
-    glPopMatrix();
-    // Rubber tip
-    setColor(0.15f, 0.15f, 0.15f);
-    glPushMatrix();
-    glTranslatef(-5.60f, 0.08f, 3.15f);
-    glutSolidSphere(0.045f, 6, 6);
-    glPopMatrix();
+
 
     // ===== Light switch on wall beside door (inside room) =====
     // Switch plate
@@ -973,7 +1070,7 @@ void drawCarpet() {
 // ===== Small Side Table =====
 void drawSideTable() {
     glPushMatrix();
-    glTranslatef(-1.5f, 0, -4.5f);
+    glTranslatef(-1.5f, 0, -5.5f);
 
     setColor(0.50f, 0.32f, 0.14f);
     glPushMatrix(); glTranslatef(0, 0.8f, 0); glScalef(0.7f, 0.07f, 0.7f); glutSolidCube(1.0); glPopMatrix();
@@ -1603,6 +1700,7 @@ void display() {
     drawPicture();
     drawSofaPhotoFrame();
     drawFrontWallDecor();
+    drawHangingWallFlower();
     drawWallMountedTV();
     drawTVCabinet();
 
